@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Sanitization Challenge</title>
 </head>
+
 <body>
 
     <h1>Welkom op onze website</h1>
@@ -24,11 +26,27 @@
 
     // Voeg het bericht toe aan een database met een enkele tabel
     // Zorg voor eigen credentials voor deze database
-    // Maak gebruik van prepared statements om SQL-injectie te voorkomen 
+    // Maak gebruik van prepared statements om SQL-injectie te voorkomen
+    $servername = "localhost";
+    $username = "";
+    $password = "";
+    $dbname = "";
 
-    // je code hier...
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-?>
+        $stmt = $conn->prepare("INSERT INTO messages (message) VALUES (:message)");
+        $stmt->bindParam(':message', $userMessage);
+        $stmt->execute();
+
+        echo "Message inserted successfully";
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+
+    $conn = null;
+    ?>
 
     <hr>
 
@@ -40,4 +58,5 @@
     </form>
 
 </body>
+
 </html>
